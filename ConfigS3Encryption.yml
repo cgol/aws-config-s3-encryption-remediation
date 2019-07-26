@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: 
+  Sample CloudFormation Template that sets up an AWS Config Rule to check that S3 Buckets in the account have at least default encryption is enabled.
+  Secondly it adds a Remediation Configuration that allows non-compliant buckets to be remediated at the click of a button.
+Resources:
+  S3RemediationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ssm.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole
+      Path: '/' 
+      Policies:
+      - PolicyName: EncryptS3
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - s3:PutEncryptionConfiguration
+            Resource: '*'
+
+  CheckS3Encrypted:
+    Type: 'AWS::Config::ConfigRule'
+    Properties:
+      ConfigRuleName: Security-S3-Storage-Encrypted
+      Description: Checks that S3 buckets have default server side encryption enabled
+      Scope:
+        ComplianceResourceTypes:
+          - 'AWS::S3::Bucket'
+      Source:
+        Owner: AWS
+        SourceIdentifier: S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED
+  
+  RemediateS3LackOfEncryption:
+    Type: AWS::Config::RemediationConfiguration
+    Properties:
+      ConfigRuleName: Security-S3-Storage-Encrypted
+      ResourceType: AWS::S3::Bucket
+      TargetType: SSM_DOCUMENT
+      TargetId: AWS-EnableS3BucketEncryption
+      Parameters: 
+        AutomationAssumeRole:
+          StaticValue: 
+            Values:
+              - !GetAtt
+                - S3RemediationRole
+                - Arn
+        BucketName:
+          ResourceValue:
+            Value: RESOURCE_ID
