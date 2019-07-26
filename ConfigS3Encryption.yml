@@ -32,7 +32,7 @@ Resources:
     Type: 'AWS::Config::ConfigRule'
     Properties:
       ConfigRuleName: Security-S3-Storage-Encrypted
-      Description: Checks that S3 buckets have default server side encryption enabled
+      Description: Checks that S3 buckets have server side encryption enabled
       Scope:
         ComplianceResourceTypes:
           - 'AWS::S3::Bucket'
@@ -43,7 +43,7 @@ Resources:
   RemediateS3LackOfEncryption:
     Type: AWS::Config::RemediationConfiguration
     Properties:
-      ConfigRuleName: Security-S3-Storage-Encrypted
+      ConfigRuleName: !Ref CheckS3Encrypted
       ResourceType: AWS::S3::Bucket
       TargetType: SSM_DOCUMENT
       TargetId: AWS-EnableS3BucketEncryption
