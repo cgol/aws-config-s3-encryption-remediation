@@ -5,6 +5,6 @@ I put this here as a reference because I found the AWS doco on creating remediat
 
 To run this, deploy into your account either using the AWS Console or a commane line:
 
-`aws cloudformation deploy --stack-name my_stack --template-file ConfigS3Encryption.yml --capabilities CAPABILITY_NAMED_IAM  --profile myprof`
+`aws cloudformation deploy --stack-name my-s3-config-rule --template-file ConfigS3Encryption.yml --capabilities CAPABILITY_NAMED_IAM  --profile myprof`
 
 Once deployed your Config rule will be avaialble in the AWS Console. Any buckets that are non-compliant can be remediated by selecting the non-compliant buckets and clicking on Remediate.
