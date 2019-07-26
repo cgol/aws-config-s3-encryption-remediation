@@ -1,5 +1,5 @@
 # aws-config-s3-encryption-remediation
-Sample Cloudformation Template that sets up a Config Rule that checks S3 default server-side encryption is enabled, and a remediation action that enables default AED256 server side encryption if non-compliant.
+Example AWS Cloudformation Template that sets up an AWS Config Rule that checks that S3 bucket default server-side encryption is enabled, and a remediation action that enables default AED256 server side encryption if buckets are non-compliant.
 
 I put this here as a reference because I found the AWS doco on creating remediation configurations for AWS Config to be a bit sparse and it took me a while to get this working correctly.
 
